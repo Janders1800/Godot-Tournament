@@ -1,0 +1,6 @@
+C:\Users\Jan\Documents\GitHub\Godot-Tournament\.mono\temp\bin\Tools\Godot Tournament.dll
+C:\Users\Jan\Documents\GitHub\Godot-Tournament\.mono\temp\bin\Tools\Godot Tournament.pdb
+C:\Users\Jan\Documents\GitHub\Godot-Tournament\.mono\temp\obj\Tools\Godot Tournament.csprojResolveAssemblyReference.cache
+C:\Users\Jan\Documents\GitHub\Godot-Tournament\.mono\temp\obj\Tools\Godot Tournament.csproj.CoreCompileInputs.cache
+C:\Users\Jan\Documents\GitHub\Godot-Tournament\.mono\temp\obj\Tools\Godot Tournament.dll
+C:\Users\Jan\Documents\GitHub\Godot-Tournament\.mono\temp\obj\Tools\Godot Tournament.pdb
