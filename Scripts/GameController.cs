@@ -9,16 +9,20 @@ public class GameController : Spatial
 
     public override void _Ready()
     {
-        // Called every time the node is added to the scene.
-        // Initialization here
-        
-        GD.Print ("Hello World!");
+        Input.SetMouseMode(Input.MouseMode.Captured);
     }
 
-//    public override void _Process(float delta)
-//    {
-//        // Called every frame. Delta is time since last frame.
-//        // Update game logic here.
-//        
-//    }
+    public override void _Process(float delta)
+    {
+        if (Input.IsActionJustPressed("ui_cancel"))
+        {
+            Input.SetMouseMode(Input.MouseMode.Visible);
+            GetTree().Quit();
+        }
+
+        if (Input.IsActionJustPressed("restart"))
+        {
+            GetTree().ReloadCurrentScene();
+        }
+    }
 }
