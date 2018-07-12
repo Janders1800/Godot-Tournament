@@ -29,6 +29,7 @@ public class Player : KinematicBody
     int airJumps = 1;
     int airJumpsLeft;
     bool canJump = false;
+    bool alowJumpInput = true;
     bool hasFloorContact = false;
     
 
@@ -99,7 +100,7 @@ public class Player : KinematicBody
 
         isWalking = Input.IsActionPressed("move_walk");
 
-        if (Input.IsActionJustPressed("jump") && hasFloorContact)
+        if (Input.IsActionJustPressed("jump") && alowJumpInput)
         {
             canJump = true;
         }
@@ -204,6 +205,7 @@ public class Player : KinematicBody
         {
             hasFloorContact = true;
             forcedWalk = false;
+            alowJumpInput = true;
 
             Vector3 floorNormal = floorChecker.GetCollisionNormal();
             float floorAngle = Mathf.Rad2Deg(Mathf.Acos(floorNormal.Dot(Vector3.Up)));
@@ -229,12 +231,12 @@ public class Player : KinematicBody
     void BlockJump(float delta)
     {
         velocity.y += gravity * delta;
-        hasFloorContact = false;
+        alowJumpInput = false;
     }
 
     void ResetJumpCount()
     {
-        if (hasFloorContact && airJumpsLeft == 0)
+        if (alowJumpInput && airJumpsLeft == 0)
         {
             airJumpsLeft = airJumps;
         }
