@@ -1,10 +1,16 @@
 # Godot-Tournament
-A fast paced FPS made in Godot Engine
+FPS controller made in Godot Engine.
 
-WASD to move arround
-Shift to walk
-F to swich betwen fly mode and normal mode
+WASD to move arround.
 
-Ctrl+R to reload scene
+Spacebar to jump.
 
-If the slope is more than 45º angle the character will not jump
+Shift to walk.
+
+F to swich betwen fly mode and normal mode.
+
+Ctrl+R to reload scene.
+
+Esc to quit.
+
+If the slope angle is greater than the "Max Slope Angle" the character will not be able to jump and run fast.
