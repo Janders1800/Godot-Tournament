@@ -7,23 +7,27 @@ public class Player : KinematicBody
     [Export] float mouseSensitivity = 0.3f;
 
     //Fly variables
-    [Export] float flySpeed = 5f;
-    [Export] float flyAcceleration = 2f;
+    [Export] float flySpeed = 12f;
+    [Export] float flyAcceleration = 7f;
     bool flyMode = false;
     Vector3 flyVelocity;
 
     //Move variables
     [Export] float gravity = -9.8f;
     [Export] float gravityMultiplier = 3f;
-    [Export] float moveSpeed = 5f;
-    [Export] float moveWalkSpeed = 2f;
-    [Export] float moveAcceleration = 2f;
-    [Export] float moveDeceleration = 4f;
+    [Export] float moveSpeed = 12f;
+    [Export] float moveWalkSpeed = 6f;
+    [Export] float moveAcceleration = 7f;
+    [Export] float moveDeceleration = 9f;
     bool isWalking = false;
+    bool forcedWalk = false;
+    bool canMove = true;
     Vector3 velocity;
     
     //Jump variables
-    [Export] float jumpSpeed = 15f;
+    [Export] float jumpSpeed = 10f;
+    int airJumps = 1;
+    int airJumpsLeft;
     bool canJump = false;
     bool hasFloorContact = false;
     
@@ -46,10 +50,13 @@ public class Player : KinematicBody
     {
         GetNodes();
         gravity = gravity * gravityMultiplier;
+        airJumpsLeft = airJumps;
     }
 
     public override void _PhysicsProcess(float delta)
     {
+        RotateView();
+
         if (flyMode)
         {
             MoveCharacterFly(delta);
@@ -57,13 +64,14 @@ public class Player : KinematicBody
         else
         {
             MoveCharacter(delta);
+            CalculateMoveToFloor(delta);
         }
     }
 
     public override void _Process(float delta)
     {
+        ResetJumpCount();
         UpdateMovementInput();
-        RotateView();
     }
 
     public override void _Input(InputEvent @event)
@@ -90,19 +98,31 @@ public class Player : KinematicBody
         direction = direction.Normalized();
 
         isWalking = Input.IsActionPressed("move_walk");
-        canJump = Input.IsActionJustPressed("jump") && hasFloorContact;
+
+        if (Input.IsActionJustPressed("jump") && hasFloorContact)
+        {
+            canJump = true;
+        }
+        else if (Input.IsActionJustPressed("jump") && airJumpsLeft > 0)
+        {
+            canJump = true;
+            airJumpsLeft--;
+        }
+        else
+        {
+            canJump = false;
+        }
+        
         if (Input.IsActionJustPressed("fly_mode")) flyMode = !flyMode;
     }
 
     void MoveCharacter(float delta)
     {
-        CalculateMoveToFloor(delta);
-
         Vector3 tempVelocity = velocity;
         tempVelocity.y = 0f;
 
         float speed;
-        speed = isWalking ? moveWalkSpeed : moveSpeed;
+        speed = isWalking || forcedWalk ? moveWalkSpeed : moveSpeed;
 
         Vector3 target = direction * speed;
 
@@ -179,25 +199,44 @@ public class Player : KinematicBody
     }
 
     void CalculateMoveToFloor(float delta)
-    {
+    {   
         if (IsOnFloor())
         {
             hasFloorContact = true;
+            forcedWalk = false;
 
             Vector3 floorNormal = floorChecker.GetCollisionNormal();
             float floorAngle = Mathf.Rad2Deg(Mathf.Acos(floorNormal.Dot(Vector3.Up)));
 
-            if (floorAngle > maxSlopeAngle) velocity.y += gravity * delta;
+            if (floorAngle > maxSlopeAngle)
+            {
+                forcedWalk = true;
+                airJumpsLeft = 0;
+                BlockJump(delta);
+            }
         }
         else
         {
             if (!floorChecker.IsColliding())
             {
-                velocity.y += gravity * delta;
-                hasFloorContact = false;
+                BlockJump(delta);
             }
         }
 
         if (hasFloorContact && !IsOnFloor()) MoveAndCollide(Vector3.Down);
+    }
+
+    void BlockJump(float delta)
+    {
+        velocity.y += gravity * delta;
+        hasFloorContact = false;
+    }
+
+    void ResetJumpCount()
+    {
+        if (hasFloorContact && airJumpsLeft == 0)
+        {
+            airJumpsLeft = airJumps;
+        }
     }
 }
