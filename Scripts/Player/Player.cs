@@ -19,9 +19,10 @@ public class Player : KinematicBody
     [Export] float moveWalkSpeed = 6f;
     [Export] float moveAcceleration = 7f;
     [Export] float moveDeceleration = 9f;
+    [Export] bool canMove = true;
     bool isWalking = false;
     bool forcedWalk = false;
-    bool canMove = true;
+    
     Vector3 velocity;
     
     //Jump variables
@@ -89,11 +90,11 @@ public class Player : KinematicBody
 
         if (flyMode)
         {
-            CalculateFlyDirection(cameraDirection);
+            if (canMove) CalculateFlyDirection(cameraDirection);
         }
         else
         {
-            CalculateMoveDirection(cameraDirection, headDirection);
+            if (canMove) CalculateMoveDirection(cameraDirection, headDirection);
         }
 
         direction = direction.Normalized();
@@ -144,7 +145,7 @@ public class Player : KinematicBody
 
         if (canJump)
         {
-            velocity.y = jumpSpeed;
+            velocity.y += jumpSpeed;
             hasFloorContact = false;
         }
 
