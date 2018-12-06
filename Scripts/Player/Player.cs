@@ -115,7 +115,12 @@ public class Player : KinematicBody
             canJump = false;
         }
         
-        if (Input.IsActionJustPressed("fly_mode")) flyMode = !flyMode;
+        if (Input.IsActionJustPressed("fly_mode"))
+        {
+            flyMode = !flyMode;
+            if (!flyMode) hasFloorContact = false;
+        }
+            
     }
 
     void MoveCharacter(float delta)
@@ -215,21 +220,20 @@ public class Player : KinematicBody
             {
                 forcedWalk = true;
                 airJumpsLeft = 0;
-                BlockJump(delta);
+                Fall(delta);
             }
         }
         else
         {
             if (!floorChecker.IsColliding())
             {
-                BlockJump(delta);
+                Fall(delta);
             }
         }
-
         if (hasFloorContact && !IsOnFloor()) MoveAndCollide(Vector3.Down);
     }
 
-    void BlockJump(float delta)
+    void Fall(float delta)
     {
         velocity.y += gravity * delta;
         alowJumpInput = false;
