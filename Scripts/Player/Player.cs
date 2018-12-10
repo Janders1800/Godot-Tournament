@@ -115,12 +115,7 @@ public class Player : KinematicBody
             canJump = false;
         }
         
-        if (Input.IsActionJustPressed("fly_mode"))
-        {
-            flyMode = !flyMode;
-            if (!flyMode) hasFloorContact = false;
-        }
-            
+        if (Input.IsActionJustPressed("fly_mode")) flyMode = !flyMode;   
     }
 
     void MoveCharacter(float delta)
@@ -227,6 +222,7 @@ public class Player : KinematicBody
         {
             if (!floorChecker.IsColliding())
             {
+                hasFloorContact = false;
                 Fall(delta);
             }
         }
